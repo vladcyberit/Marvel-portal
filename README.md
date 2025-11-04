@@ -1,4 +1,4 @@
-# 🦸‍♂️ Marvel Explorer
+# 🦸‍♂️ Marvel Portal
 
 A modern **React + TypeScript** application built with **Vite** and **Tailwind CSS**, powered by the official **Marvel API**.  
 It allows users to browse Marvel characters, view detailed hero information, and explore related comics with short descriptions and prices.
