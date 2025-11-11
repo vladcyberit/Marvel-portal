@@ -1,5 +1,6 @@
 import { Component } from "react";
 import Button from "./Button";
+import Decoration from "../resources/img/Decoration.png";
 import { getCharacterByID, type CharacterDetailed } from "../services/MarvelService";
 
 interface State {
@@ -57,16 +58,21 @@ class RandomChar extends Component {
         }
     }
 
-    nameRandomChar: string = "Thor";
-    descRandomChar: string = "As the Norse God of thunder and lightning, Thor wields one of the greatest weapons ever made, the enchanted hammer Mjolnir. While others have described Thor as an over-muscled, he's quite smart and compassionate...";
-    imgRandomChar: string = "src/resources/img/Thumbnail.png"
+    descTransform = () => {
+        const { char: {description} } = this.state;
+        const str = description;
+
+        if (!str) return null;
+
+        const strCut = str.length > 135 ? str.slice(0, 135) + "..." : str;
+        return strCut;  
+    }
+
     hookRandomChar: string = `Random character for today! Do you want to get to know him better?`;
     extraHookRandomChar: string = "Or choose another one";
-    imgDecoration: string = "src/resources/img/Decoration.png";
-
 
     render() {
-        const { char: {name, description, thumbnail} } = this.state;
+        const { char: {name, thumbnail} } = this.state;
 
         return (
             <section className="flex flex-col md:flex-row h-[260px] shadow-[5px_5px_40px_rgba(0,0,0,0.25)]">
@@ -74,7 +80,7 @@ class RandomChar extends Component {
                     <img className="w-[180px] h-[180px] object-cover" src={thumbnail} alt="Random character" />
                     <div className="flex flex-col h-44 gap-3">
                         <h1 className="font-bold text-[22px] uppercase">{name}</h1>
-                        <p className="text-[14px]">{description}</p>
+                        <p className="text-[14px]">{this.descTransform()}</p>
                         <div className="flex gap-8 mt-auto">
                             <Button name="homepage" text="Homepage" onClick={(e) => this.goToLink(e.currentTarget.name)} color="red"/>
                             <Button name="wiki" text="Wiki" onClick={(e) => this.goToLink(e.currentTarget.name)} color="gray"/>
@@ -86,7 +92,7 @@ class RandomChar extends Component {
                     <h1 className="font-bold text-2xl text-white mb-10 max-w-[370px]">{this.hookRandomChar}</h1>
                     <h1 className="font-bold text-2xl text-white mb-3.5">{this.extraHookRandomChar}</h1>
                     <Button text="Try it" onClick={() => {}} color="red"/>
-                    <img className="absolute w-52 -right-10 bottom-5" src={this.imgDecoration} alt="" />
+                    <img className="absolute w-52 -right-10 bottom-5" src={Decoration} alt="" />
                 </div>
             </section>
         );
