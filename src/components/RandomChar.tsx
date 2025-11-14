@@ -1,8 +1,10 @@
 import { Component } from "react";
-import Button from "./Button";
-import Decoration from "../resources/img/Decoration.png";
 import { getCharacterByID, type CharacterDetailed } from "../services/MarvelService";
+
+import Button from "./Button";
 import Spinner from "./Spinner";
+
+import Decoration from "../resources/img/Decoration.png";
 
 interface State {
     char: {
@@ -80,7 +82,7 @@ class RandomChar extends Component {
         return (
             <section className="flex flex-col md:flex-row h-[260px] shadow-[5px_5px_40px_rgba(0,0,0,0.25)]">
                 <div className="flex justify-center items-center w-full md:w-1/2 bg-white p-[35px] gap-[30px]">
-                    {(loading) ? <Spinner/> : <View char={char} descTransform={this.descTransform} goToLink={this.goToLink}/>}
+                    {loading ? <Spinner/> : <View char={char} descTransform={this.descTransform} goToLink={this.goToLink}/>}
                 </div>
                 
                 <div className="flex flex-col justify-center w-full md:w-1/2 bg-[#232222] p-[35px] relative">
@@ -106,14 +108,14 @@ interface CharView {
     }
 }
 
-interface ViewProps {
+type ViewProps = {
     char: CharView
     descTransform: () => string | null
     goToLink: (name: string) => void
 }
 
-const View = ({char, descTransform, goToLink}: ViewProps) => {
-    const {name, thumbnail} = char;
+const View = ({ char, descTransform, goToLink }: ViewProps) => {
+    const { name, thumbnail } = char;
     return (
         <>
             <img className="w-[180px] h-[180px] object-cover" src={thumbnail} alt="Random character" />
