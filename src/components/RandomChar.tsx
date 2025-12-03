@@ -3,8 +3,10 @@ import { getCharacterByID, type CharacterDetailed } from "../services/MarvelServ
 
 import Button from "./Button";
 import Spinner from "./Spinner";
+import ErrorMessage from "./ErrorMessage";
 
 import Decoration from "../resources/img/Decoration.png";
+
 
 interface State {
     char: {
@@ -19,6 +21,7 @@ interface State {
         }
     }
     loading: boolean
+    error: boolean
 }
 
 class RandomChar extends Component {
@@ -37,18 +40,28 @@ class RandomChar extends Component {
             wiki: null,
             comics: null
         },
-        loading: true
+        loading: true,
+        error: false
     }
 
     onCharLoaded = (char: CharacterDetailed) => {
         this.setState({char, loading: false});
     };
 
+    onError = () => {
+        this.setState({loading: false, error: true});
+    }
+
     updateChar = async () => {
-        const id: number = Math.floor(Math.random() * (20 - 1) + 1);
-        const res = await getCharacterByID(id);
-        this.onCharLoaded(res); 
+        try {
+            const res = await getCharacterByID(this.getRandomID());
+            this.onCharLoaded(res); 
+        } catch {
+            this.onError();
+        }
     };
+
+    getRandomID = () => Math.floor(Math.random() * (20 - 1) + 1);
 
     goToLink = (name: string) => {
         const { char: {homepage, wiki} } = this.state;
@@ -77,17 +90,22 @@ class RandomChar extends Component {
     extraHookRandomChar: string = "Or choose another one";
 
     render() {
-        const { char, loading } = this.state;
+        const { char, loading, error } = this.state;
+        const errorMessage = error ? <ErrorMessage /> : null;
+        const spinner = loading ? <Spinner /> : null;
+        const content = !(loading || error) ? <View char={char} descTransform={this.descTransform} goToLink={this.goToLink}/> : null;
 
         return (
             <section className="flex flex-col md:flex-row h-[260px] shadow-[5px_5px_40px_rgba(0,0,0,0.25)]">
                 <div className="flex justify-center items-center w-full md:w-1/2 bg-white p-[35px] gap-[30px]">
-                    {loading ? <Spinner/> : <View char={char} descTransform={this.descTransform} goToLink={this.goToLink}/>}
+                    {errorMessage}
+                    {spinner}
+                    {content}
                 </div>
                 
                 <div className="flex flex-col justify-center w-full md:w-1/2 bg-[#232222] p-[35px] relative">
-                    <h1 className="font-bold text-2xl text-white mb-10 max-w-[370px]">{this.hookRandomChar}</h1>
-                    <h1 className="font-bold text-2xl text-white mb-3.5">{this.extraHookRandomChar}</h1>
+                    <h1 className="font-bold text-[20px] text-white mb-8 max-w-[370px]">{this.hookRandomChar}</h1>
+                    <h1 className="font-bold text-[20px] text-white mb-3.5">{this.extraHookRandomChar}</h1>
                     <Button text="Try it" onClick={() => {}} color="red"/>
                     <img className="absolute w-52 -right-10 bottom-5" src={Decoration} alt="" />
                 </div>
