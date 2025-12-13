@@ -25,10 +25,6 @@ interface State {
 }
 
 class RandomChar extends Component {
-    constructor(props) {
-        super(props);
-        this.updateChar();
-    }
 
     state: State = {
         char: {
@@ -42,6 +38,10 @@ class RandomChar extends Component {
         },
         loading: true,
         error: false
+    }
+
+    componentDidMount(): void {
+        this.updateChar();
     }
 
     onCharLoaded = (char: CharacterDetailed) => {
